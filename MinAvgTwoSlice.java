@@ -42,6 +42,7 @@ each element of array A is an integer within the range [−10,000..10,000].
 
 
 */
+
 // you can also use imports, for example:
 // import java.util.*;
 
@@ -55,16 +56,16 @@ class Solution {
         float avg = 0;
         float preAvg = Float.MAX_VALUE;
         
-        for(int j=1;j<A.length-1;j++) {
-            for(int i = A.length-1; i > j; i-=j) {
+        for(int j=1;j<((A.length/2)+1);j++) {
+            for(int i = A.length-1; i > 0; i-=j) {
                 if(i<=j) 
                     continue;
 
                 avg = average(A, i-j, i);
-                //System.out.println("i,j : " + (i-j) +"," + i + " avg: " + avg);
+                System.out.println("i,j : " + (i-j) +"," + i + " avg: " + avg);
 
                 if(preAvg > avg) {
-                    //System.out.println("i,j : " + (i-j) +"," + i + " avg: " + avg);
+                    System.out.println("assigned i,j : " + (i-j) +"," + i + " avg: " + avg);
                     preAvg = avg;
                     minIndex = i-j;
                 }
