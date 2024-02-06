@@ -33,49 +33,59 @@ Write an efficient algorithm for the following assumptions:
 N is an integer within the range [0..400,000];
 each element of array A is an integer within the range [0..200,000].
 */
-
 // you can also use imports, for example:
-// import java.util.*;
+import java.util.*;
 
 // you can write to stdout for debugging purposes, e.g.
 // System.out.println("this is a debug message");
 
 class Solution {
     public int solution(int[] A) {
+
+        int nextMax = -1;
+        int start = 0;
         int maxProfit = 0;
-        if(A.length <= 1) {
+        int currentProfit=0;
+        //cater for multiple humps in the max values, loop for each max and split the sub array to find localised max profit.
+        // ex: 4,8,1,6
+        do {
+            nextMax = nextMax(A,nextMax+1);
+            currentProfit = profit(A, start, nextMax);
+            if(currentProfit > maxProfit) {
+                maxProfit = currentProfit;
+            }
+           // System.out.println("max: " + nextMax + " currentProfit: " + currentProfit + " maxProfit:" + maxProfit);
+        } while(nextMax != -1);
+        return maxProfit;
+    }
+    private int profit(int[] A, int start, int end) {
+        if(end == -1 || start ==-1) { 
             return 0;
         }
-        int startIndex = 0;
-        while(startIndex < A.length-1 && A[startIndex] > A[startIndex+1]){
-            startIndex++;
+        int maxProfit = A[end] - A[start];
+        int prevProfit = maxProfit;
+        for(int i=start+1;i<=end;i++){
+            int currentProfit = A[i-1] - A[i] + prevProfit;
+            if(currentProfit > maxProfit) {
+                maxProfit = currentProfit;
+            }
+            prevProfit = currentProfit;
         }
-        int endIndex = A.length-1;
-        while(endIndex > 0  && A[endIndex] < A[endIndex-1]){
-            endIndex--;
+        return maxProfit;
+    }
+    private int nextMax(int [] A, int maxI) {
+        if(maxI >= A.length) {
+            return -1;
         }
-//System.out.println(startIndex + " : " + endIndex);
-        int max=Integer.MIN_VALUE;
-        int min=Integer.MAX_VALUE;
-        if(startIndex < endIndex) {
-            for(int i=startIndex;i<=endIndex-1;i++) {
-                if(A[i] > min) {
-                    continue;
-                } 
-                for(int j=i+1;j<=endIndex;j++) {
-                    if(A[j] < max) {
-                        continue;
-                    } 
-                    if(maxProfit < (A[j]-A[i])){
-                        maxProfit = (A[j]-A[i]);
-                        min = A[i];
-                        max = A[j];
-                    }
-                }
+        int max=A[maxI];
+        int nextMax = maxI;
+        for(int i=maxI + 1;i<A.length;i++) {
+            if(max<A[i]) {
+                max = A[i];
+                nextMax = i;
             }
         }
-
-        return maxProfit;
+        return nextMax;
     }
 }
 
